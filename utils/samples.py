@@ -12,7 +12,7 @@ class Sample:
         self.y = coordinates[1]
         self.w = coordinates[2]
         self.h = coordinates[3]
-        self.img = cv.imread(self.img_path)[self.y : self.y + self.h, self.x : self.x + self.w]
+        self.img = cv.imread(self.img_path)[self.y: self.y + self.h, self.x: self.x + self.w]
 
         self.desired_size = desired_size
         if self.desired_size is not None:
@@ -47,7 +47,8 @@ class Samples:
             num_pos = int(parts[1])
             assert len(parts) == (2 + 4 * num_pos), 'Corrupt positive labels file'
             for i in range(num_pos):
-                coordinates = (int(parts[2 + 4*i]), int(parts[3 + 4*i]), int(parts[4 + 4*i]), int(parts[5 + 4*i]))
+                coordinates = (
+                int(parts[2 + 4 * i]), int(parts[3 + 4 * i]), int(parts[4 + 4 * i]), int(parts[5 + 4 * i]))
                 sample = Sample(img_path, coordinates, self.desired_size)
                 self.samples.append(sample)
 
@@ -112,32 +113,29 @@ class Samples:
                 cv.imwrite(str(filepath), sample.img_resized)
 
 
-
 def generate_negative_description_file(folder):
     # open the output file for writing. will overwrite all existing data in there
-    with open('neg.txt', 'w') as f:
+    with open('metin_farm_bot/neg.txt', 'w') as f:
         # loop over all the filenames
         for filename in os.listdir(folder):
             f.write(folder + filename + '\n')
     # python
     # from utils.samples import generate_negative_description_file
-    # generate_negative_description_file('classifier/negative_total/')
+    # generate_negative_description_file('metin_farm_bot/classifier/negative_total')
 
 # Watch watch watch
 # https://www.youtube.com/watch?v=XrCAvs9AePM
 
 # Open annotation tool
-# C:/Users/Philipp/Development/OpenCV_CLI_Tools/opencv_annotation.exe --annotations=classifier/pos_2020_12_22_01.txt --images=classifier/positive_2020_12_22_01/
+# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_annotation.exe --annotations=metin_farm_bot/classifier/positive_2023_7_3_01.txt --images=metin_farm_bot/classifier/positive_2023_7_3_01/
 
 # Create vector file of positive samples
-# C:/Users/Philipp/Development/OpenCV_CLI_Tools/opencv_createsamples.exe -info pos.txt -w 24 -h 24 -num 1000 -vec pos.vec
+# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_createsamples.exe -info metin_farm_bot/classifier/positive_2023_7_3_01/positive_2023_7_3_01.txt -w 24 -h 24 -num 1000 -vec metin_farm_bot/pos.vec
 
 # Train cascade classifier
-# C:/Users/Philipp/Development/OpenCV_CLI_Tools/opencv_traincascade.exe -data cascade/ -vec pos.vec -bg neg.txt -w 24 -h 24 -numPos 120 -numNeg 60 -numStages 10 -miniHitRate 0.5 -maxFalseAlarmRate 0.5
-# C:/Users/Philipp/Development/OpenCV_CLI_Tools/opencv_traincascade.exe -data classifier/cascade/ -vec pos.vec -bg neg.txt -w 20 -h 32 -numPos 240 -numNeg 480 -numStages 15 -minHitRate 0.5 -maxFalseAlarmRate 0.5 -acceptanceRatioBreakValue 0.0005
-# C:/Users/Philipp/Development/OpenCV_CLI_Tools/opencv_traincascade.exe -data classifier/cascade/ -vec pos.vec -bg neg.txt -w 20 -h 32 -numPos 160 -numNeg 1000 -numStages 15 -minHitRate 0.5 -maxFalseAlarmRate 0.5 -acceptanceRatioBreakValue 0.0001
+# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_traincascade.exe -data classifier/cascade/ -vec pos.vec -bg neg.txt -w 24 -h 24 -numPos 400 -numNeg 200 -numStages 10 -miniHitRate 0.5 -maxFalseAlarmRate 0.5
+# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_traincascade.exe -data classifier/cascade/ -vec pos.vec -bg neg.txt -w 24 -h 24 -numPos 500 -numNeg 250 -numStages 15 -minHitRate 0.5 -maxFalseAlarmRate 0.5 -acceptanceRatioBreakValue 0.0005
+# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_traincascade.exe -data classifier/cascade/ -vec pos.vec -bg neg.txt -w 24 -h 24 -numPos 320 -numNeg 640 -numStages 15 -minHitRate 0.5 -maxFalseAlarmRate 0.5 -acceptanceRatioBreakValue 0.0001
 
 # Visualize results
-# OpenCV_CLI_Tools/opencv_visualisation --image=Metin2-Bot/classifier/sample_export_1608646494/pos_resized=True_1608567101.jpg --model=Metin2-Bot/classifier/cascade/cascade.xml --data=Metin2-Bot/classifier/visu_output_2020_12_22/
-
-
+# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_visualisation --image=metin_farm_bot/classifier/sample_export_1678794180/pos_resized=True_1678275488.jpg --model=metin_farm_bot/classifier/cascade/cascade.xml --data=metin_farm_bot/classifier/visu_output_2020_12_22/

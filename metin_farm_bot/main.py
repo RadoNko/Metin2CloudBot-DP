@@ -60,10 +60,10 @@ def main():
 
 
 def metin_select(metin_selection):
-    metins = {'Lvl. 40: Tal von Seungryong': 'lv_40',
-              'Lvl. 60: Hwang-Tempel': 'lv_60',
-              'Lvl. 70: Feuerland': 'lv_70',
-              'Lvl. 90: Roter Wald': 'lv_90'}
+    metins = {'Lvl. 50: Kámen tvrdosti': 'lv_40',
+              'Lvl. 60: Kámen pádu': 'lv_60',
+              'Lvl. 70: Kámen vraždy': 'lv_70',
+              'Lvl. 90: Kámen Jeon-Un': 'lv_90'}
 
     def set_metin_cb(window, metin, metin_selection):
         metin_selection['metin'] = metin
