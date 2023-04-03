@@ -81,19 +81,21 @@ class MetinFarmBot:
             if self.state == BotState.INITIALIZING:
                 self.metin_window.activate()
                 self.respawn_if_dead()
-                self.teleport_back()
-                self.osk_window.recall_mount()
-                self.turn_on_buffs()
-                self.calibrate_view()
+                self.osk_window.mount_up()
+                # self.osk_window.recall_mount()
+                # self.turn_on_buffs()
+                # self.calibrate_view()
                 self.started = time.time()
                 self.switch_state(BotState.SEARCHING)
 
             if self.state == BotState.SEARCHING:
                 # Check if screenshot is recent
                 if self.screenshot is not None and self.detection_time is not None and \
-                        self.detection_time > self.time_entered_state + 0.1:
+                        self.detection_time > self.time_entered_state + 0.5:
                     # If no matches were found
+                    # print(self.detection_result)
                     if self.detection_result is None:
+                        print("No metin found 1")
                         self.put_info_text('No metin found, will rotate!')
 
                         if self.rotate_count >= self.rotate_threshold:
@@ -111,11 +113,18 @@ class MetinFarmBot:
                             self.time_entered_state = time.time()
                     else:
                         # self.put_info_text(f'Best match width: {self.detection_result["best_rectangle"][2]}')
+                        # print(*self.detection_result['click_pos'])
+                        # Y*1.25
+                        self.detection_result['click_pos'] = list(self.detection_result['click_pos'])
+                        self.detection_result['click_pos'][0] = int(self.detection_result['click_pos'][0] * 1.25)
+                        self.detection_result['click_pos'][1] = int(self.detection_result['click_pos'][1] * 1.25)
+                        self.detection_result['click_pos'] = tuple(self.detection_result['click_pos'])
                         self.metin_window.mouse_move(*self.detection_result['click_pos'])
                         time.sleep(0.1)
                         self.switch_state(BotState.CHECKING_MATCH)
 
             if self.state == BotState.CHECKING_MATCH:
+
                 if self.screenshot_time > self.time_entered_state:
                     pos = self.metin_window.get_relative_mouse_pos()
                     width = 200
@@ -129,28 +138,36 @@ class MetinFarmBot:
 
                     match_loc, match_val = self.vision.template_match_alpha(mob_title_box,
                                                                             utils.get_metin_needle_path())
-                    if match_loc is not None:
-                        self.put_info_text('Metin found!')
-                        self.metin_window.mouse_click()
-                        self.osk_window.ride_through_units()
-                        self.switch_state(BotState.MOVING)
-                    else:
-                        self.put_info_text('No metin found -> rotate and search again!')
-                        self.rotate_view()
-                        self.switch_state(BotState.SEARCHING)
+
+                    #  if match_loc is not None:
+                    self.put_info_text('Metin found!')
+                    self.metin_window.mouse_click()
+                    #  self.put_info_text(str(match_loc))
+                    #  self.put_info_text(str(match_val))
+                    #  self.metin_window.mouse_click(match_loc[0], match_loc[1])
+                    #  self.osk_window.ride_through_units()
+                    self.switch_state(BotState.MOVING)
+                    #  else:
+                    #  print("No metin found 2")
+                    #  self.put_info_text('No metin found -> rotate and search again!')
+                    #  self.rotate_view()
+                    #  self.switch_state(BotState.SEARCHING)
 
             if self.state == BotState.MOVING:
+                #  self.put_info_text('We got here')
                 if self.started_moving_time is None:
+                    #  self.put_info_text('But not here 1')
                     self.started_moving_time = time.time()
 
-                result = self.get_mob_info()
-                if result is not None and result[1] < 100:
+                    # result = self.get_mob_info()
+                    #  if result is not None and result[1] < 100:
                     self.started_moving_time = None
                     self.move_fail_count = 0
-                    self.put_info_text(f'Started hitting {result[0]}')
+                    self.put_info_text(f'Started hitting')
                     self.switch_state(BotState.HITTING)
 
                 elif time.time() - self.started_moving_time >= 10:
+
                     self.started_moving_time = None
                     self.osk_window.pick_up()
                     self.move_fail_count += 1
@@ -162,7 +179,6 @@ class MetinFarmBot:
                         self.put_info_text(f'Failed to move to metin ({self.move_fail_count} time) -> search again')
                         self.rotate_view()
                         self.switch_state(BotState.SEARCHING)
-
             if self.state == BotState.HITTING:
                 self.rotate_count = 0
                 self.calibrate_count = 0
@@ -171,8 +187,9 @@ class MetinFarmBot:
                 if self.started_hitting_time is None:
                     self.started_hitting_time = time.time()
 
-                result = self.get_mob_info()
-                if result is None or time.time() - self.started_hitting_time >= 12:
+                #  result = self.get_mob_info()
+                #  if result is None or time.time() - self.started_hitting_time >= 20:
+                if time.time() - self.started_hitting_time >= 55:
                     self.started_hitting_time = None
                     self.put_info_text('Finished -> Collect drop')
                     self.metin_count += 1
@@ -215,9 +232,9 @@ class MetinFarmBot:
                 # self.rotate_view()
                 time.sleep(3)
                 self.calibrate_view()
-                # while True:
-                #     self.put_info_text(str(self.metin_window.get_relative_mouse_pos()))
-                #     time.sleep(1)
+                while True:
+                    self.put_info_text(str(self.metin_window.get_relative_mouse_pos()))
+                    time.sleep(1)
                 self.stop()
 
     def start(self):
@@ -333,16 +350,17 @@ class MetinFarmBot:
             return name, health
 
     def get_mob_info(self):
-        top_left = (300, 21)
-        bottom_right = (560, 37)
+        top_left = (int(297 * 1.25), int(42 * 1.25))
+        bottom_right = (int(560 * 1.25), int(37 * 1.25))
 
         self.info_lock.acquire()
         mob_info_box = self.vision.extract_section(self.screenshot, top_left, bottom_right)
+
         self.info_lock.release()
 
         mob_info_box = self.vision.apply_hsv_filter(mob_info_box, hsv_filter=self.mob_info_hsv_filter)
         mob_info_text = pytesseract.image_to_string(mob_info_box)
-
+        print(mob_info_text)
         return self.process_metin_info(mob_info_text)
 
     def turn_on_buffs(self):

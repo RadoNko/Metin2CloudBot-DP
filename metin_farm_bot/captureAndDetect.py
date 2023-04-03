@@ -93,7 +93,7 @@ class CaptureAndDetect:
         return screenshot, screenshot_time, detection, detection_time, detection_image
 
     def find_best_match(self, rectangles):
-        ideal_width = 80
+        ideal_width = 50
         diff = []
         for rectangle in rectangles:
             diff.append(abs(rectangle[2] - ideal_width))

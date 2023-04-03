@@ -20,6 +20,7 @@ class Window:
         self.gw_object = gw.getWindowsWithTitle(self.name)[0]
 
         rect = win32gui.GetWindowRect(self.hwnd)
+        print(str(rect))
         border = 8
         title_bar = 31
         self.x = rect[0] + border
@@ -49,6 +50,7 @@ class Window:
                 sleep(1)
 
     def mouse_move(self, x, y):
+        pyautogui.FAILSAFE = False
         pyautogui.moveTo(self.x + x, self.y + y, duration=0.1)
 
     def mouse_click(self, x=None, y=None):
@@ -81,7 +83,8 @@ class Window:
         dataBitMap = win32ui.CreateBitmap()
         dataBitMap.CreateCompatibleBitmap(dcObj, self.width, self.height)
         cDC.SelectObject(dataBitMap)
-        cDC.BitBlt((0, 0), (self.width, self.height), dcObj, (self.cropped_x, self.cropped_y), win32con.SRCCOPY)
+        cDC.BitBlt((0, 0), (self.width - 300, self.height - 300), dcObj, (self.cropped_x, self.cropped_y),
+                   win32con.SRCCOPY)
         # win32gui.BitBlt(cDC, 0, 0, self.width, self.height, dcObj, self.cropped_x, self.cropped_y, win32con.SRCCOPY)
         # dataBitMap.SaveBitmapFile(cDC, 'debug.bmp')
 
@@ -111,7 +114,7 @@ class MetinWindow(Window):
 
     def activate(self):
         self.mouse_move(40, -15)
-        sleep(0.1)
+        sleep(0.2)
         self.mouse_click()
 
 
@@ -126,15 +129,26 @@ class OskWindow(Window):
         self.gw_object.resizeTo(self.width, self.height)
         incx = 1.25
         incy = 1.25
-        self.key_pos = {'space': (200 * incx, 210 * incy), 'Fn': (20 * incx, 210 * incy), 'Alt': (100 * incx, 210 * incy),
-                        '1': (70 * incx, 80 * incy), '2': (100 * incx, 80 * incy), '3': (130 * incx, 80 * incy),
-                        '4': (160 * incx, 80 * incy),
-                        'z': (200 * incx, 110 * incy), 'y': (80 * incx, 180 * incy), 'e': (110 * incx, 110 * incy),
-                        'q': (50 * incx, 120 * incy),
-                        'g': (180 * incx, 150 * incy), 't': (170 * incx, 110 * incy), 'Ctrl': (40 * incx, 210 * incy),
-                        'h': (210 * incx, 150 * incy), 'r': (140 * incx, 110 * incy), 'f': (160 * incx, 150 * incy),
-                        'b': (190 * incx, 180 * incy)
+        self.key_pos = {'space': (200 * incx, 210 * incy), 'Fn': (20 * incx, 210 * incy),
+                        'Alt': (100 * incx, 210 * incy), 'Shift': (40 * incx, 180 * incy),
+                        'Caps': (20 * incx, 150 * incy), 'Tab': (20 * incx, 115 * incy),
+                        'Enter': (380 * incx, 140 * incy),
+                        ';': (40 * incx, 80 * incy), '1': (70 * incx, 80 * incy), '2': (100 * incx, 80 * incy),
+                        '3': (130 * incx, 80 * incy),
+                        '4': (160 * incx, 80 * incy),'5': (190 * incx, 80 * incy),'6': (220 * incx, 80 * incy),'7': (250 * incx, 80 * incy),'8': (280 * incx, 80 * incy),'9': (290 * incx, 80 * incy), 'Ctrl': (40 * incx, 210 * incy),
+
+                        'q': (50 * incx, 120 * incy), 'w': (80 * incx, 120 * incy), 'e': (110 * incx, 120 * incy),
+                        'r': (140 * incx, 110 * incy), 't': (170 * incx, 110 * incy), 'y': (200 * incx, 120 * incy),
+                        'u': (220 * incx, 120 * incy), 'i': (250 * incx, 120 * incy), 'o': (280 * incx, 120 * incy),
+                        'p': (310 * incx, 120 * incy),
+                        'a': (70 * incx, 150 * incy), 's': (100 * incx, 150 * incy), 'd': (130 * incx, 150 * incy),
+                        'f': (160 * incx, 150 * incy), 'g': (180 * incx, 150 * incy), 'h': (210 * incx, 150 * incy),
+                        'j': (240 * incx, 150 * incy), 'k': (270 * incx, 150 * incy), 'l': (300 * incx, 150 * incy),
+                        'z': (80 * incx, 180 * incy), 'x': (110 * incx, 180 * incy), 'c': (140 * incx, 180 * incy),
+                        'v': (170 * incx, 180 * incy), 'b': (200 * incx, 180 * incy), 'n': (230 * incx, 180 * incy),
+                        'm': (80 * incx, 180 * incy),
                         }
+
     def test_keys(self):
         self.press_key(button='1', mode='click')
         sleep(0.2)
@@ -182,7 +196,7 @@ class OskWindow(Window):
         self.press_key(button='2', mode='click', count=3)
 
     def pick_up(self):
-        self.press_key(button='z', mode='click', count=1)
+        self.press_key(button=';', mode='click', count=1)
 
     def activate_tp_ring(self):
         self.press_key(button='3', mode='click', count=1)
@@ -191,6 +205,10 @@ class OskWindow(Window):
         self.press_key(button='Ctrl', mode='click')
         sleep(0.2)
         self.press_key(button='b', mode='click')
+    def mount_up(self):
+        self.press_key(button='Ctrl', mode='click')
+        sleep(0.2)
+        self.press_key(button='g', mode='click')
 
     def call_mount(self):
         self.press_key(button='Fn', mode='click')
@@ -251,7 +269,12 @@ class OskWindow(Window):
     def press_key(self, button, mode='click', count=1):
         x, y = self.x, self.y
         if button not in self.key_pos.keys():
-            raise Exception('Unknown key!')
+            if button.lower() in self.key_pos.keys():
+                self.press_key(button.lower(), 'clickCapital')
+                return
+            else:
+                raise Exception('Unknown key!')
+
         else:
             x += self.key_pos[button][0]
             y += self.key_pos[button][1]
@@ -259,8 +282,12 @@ class OskWindow(Window):
         if mode == 'click':
             for i in range(count):
                 pyautogui.mouseDown()
-                sleep(0.1)
+                sleep(0.001)
                 pyautogui.mouseUp()
+        elif mode == 'clickCapital':
+            for i in range(count):
+                self.press_key('Shift')
+                self.press_key(button)
         elif mode == 'down':
             pyautogui.mouseDown()
         elif mode == 'up':

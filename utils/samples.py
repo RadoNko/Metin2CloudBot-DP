@@ -121,21 +121,21 @@ def generate_negative_description_file(folder):
             f.write(folder + filename + '\n')
     # python
     # from utils.samples import generate_negative_description_file
-    # generate_negative_description_file('metin_farm_bot/classifier/negative_total')
+    # generate_negative_description_file('metin_farm_bot/classifier/negative_2023_19_3_01')
 
 # Watch watch watch
 # https://www.youtube.com/watch?v=XrCAvs9AePM
 
 # Open annotation tool
-# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_annotation.exe --annotations=metin_farm_bot/classifier/positive_2023_7_3_01.txt --images=metin_farm_bot/classifier/positive_2023_7_3_01/
+# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_annotation.exe --annotations=metin_farm_bot/classifier/positive_2023_19_3_01.txt --images=metin_farm_bot/classifier/positive_2023_19_3_01/
 
 # Create vector file of positive samples
-# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_createsamples.exe -info metin_farm_bot/classifier/positive_2023_7_3_01/positive_2023_7_3_01.txt -w 24 -h 24 -num 1000 -vec metin_farm_bot/pos.vec
+# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_createsamples.exe -info metin_farm_bot/classifier/positive_2023_19_3_01.txt -w 20 -h 32 -num 1000 -vec metin_farm_bot/pos.vec
 
 # Train cascade classifier
-# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_traincascade.exe -data classifier/cascade/ -vec pos.vec -bg neg.txt -w 24 -h 24 -numPos 400 -numNeg 200 -numStages 10 -miniHitRate 0.5 -maxFalseAlarmRate 0.5
-# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_traincascade.exe -data classifier/cascade/ -vec pos.vec -bg neg.txt -w 24 -h 24 -numPos 500 -numNeg 250 -numStages 15 -minHitRate 0.5 -maxFalseAlarmRate 0.5 -acceptanceRatioBreakValue 0.0005
-# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_traincascade.exe -data classifier/cascade/ -vec pos.vec -bg neg.txt -w 24 -h 24 -numPos 320 -numNeg 640 -numStages 15 -minHitRate 0.5 -maxFalseAlarmRate 0.5 -acceptanceRatioBreakValue 0.0001
+# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_traincascade.exe -data classifier/cascade/ -vec pos.vec -bg neg.txt -w 20 -h 32 -numPos 400 -numNeg 200 -numStages 10 -miniHitRate 0.5 -maxFalseAlarmRate 0.5
+# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_traincascade.exe -data classifier/cascade/ -vec pos.vec -bg neg.txt -w 20 -h 32 -numPos 500 -numNeg 250 -numStages 15 -minHitRate 0.5 -maxFalseAlarmRate 0.5 -acceptanceRatioBreakValue 0.0005
+# C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_traincascade.exe -data classifier/cascade/ -vec pos.vec -bg neg.txt -w 20 -h 32 -numPos 320 -numNeg 640 -numStages 15 -minHitRate 0.5 -maxFalseAlarmRate 0.5 -acceptanceRatioBreakValue 0.0001
 
 # Visualize results
 # C:/Users/oxan/OpenCV_CLI_Tools/opencv/build/x64/vc15/bin/opencv_visualisation --image=metin_farm_bot/classifier/sample_export_1678794180/pos_resized=True_1678275488.jpg --model=metin_farm_bot/classifier/cascade/cascade.xml --data=metin_farm_bot/classifier/visu_output_2020_12_22/

@@ -22,16 +22,30 @@ class HsvFilter:
 
 class Metin50Filter(HsvFilter):
     def __init__(self):
-        self.hMin = 154
+        self.hMin = 0
         self.sMin = 0
         self.vMin = 0
-        self.hMax = 179
-        self.sMax = 175
-        self.vMax = 255
-        self.sAdd = 0
-        self.sSub = 0
-        self.vAdd = 255
-        self.vSub = 21
+        self.hMax = 120
+        self.sMax = 186
+        self.vMax = 248
+        self.sAdd = 156
+        self.sSub = 23
+        self.vAdd = 15
+        self.vSub = 0
+
+
+class Metin45Filter(HsvFilter):
+    def __init__(self):
+        self.hMin = 0
+        self.sMin = 0
+        self.vMin = 0
+        self.hMax = 120
+        self.sMax = 186
+        self.vMax = 248
+        self.sAdd = 156
+        self.sSub = 23
+        self.vAdd = 15
+        self.vSub = 0
 
 
 class SnowManFilterRedForest(HsvFilter):
@@ -196,7 +210,8 @@ class Vision:
         needle = cv.imread(needle_path, cv.IMREAD_UNCHANGED)
         result = cv.matchTemplate(haystack_img, needle[:, :, :3], cv.TM_SQDIFF, mask=needle[:, :, 3])
         match_val, _, match_loc, _ = cv.minMaxLoc(result)
-        if match_val > 10_000:
+        # TODO: TEST THIS VALUE
+        if match_val > 25_000:
             return None, match_val
         else:
             return match_loc, match_val

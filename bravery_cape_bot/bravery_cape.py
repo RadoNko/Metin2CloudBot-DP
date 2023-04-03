@@ -12,7 +12,7 @@ def command_pause():
 def main():
     pyautogui.countdown(3)
     osk = OskWindow('On-Screen Keyboard')
-    aeldra = MetinWindow('Aeldra.to - Zeta')
+    aeldra = MetinWindow('Aureria.cz')
     osk.move_window(x=0, y=0)
     testkeys = True
 

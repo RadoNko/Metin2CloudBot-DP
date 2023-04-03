@@ -1,22 +1,24 @@
 import cv2 as cv
 import utils
 from captureAndDetect import CaptureAndDetect
-from utils.window import MetinWindow
+from utils.window import MetinWindow, OskWindow
 from bot import MetinFarmBot
 import tkinter as tk
 from utils import Metin50Filter, SnowManFilterRedForest
 from functools import partial
+from time import sleep
 
 
 def main():
     # Choose which metin
-    metin_selection = {'metin': None}
-    metin_select(metin_selection)
+    metin_selection = {'metin': 'Lvl. 45: Kámen stínu'}
+    # metin_select(metin_selection)
     metin_selection = metin_selection['metin']
-    hsv_filter = Metin50Filter() if metin_selection != 'lv_90' else SnowManFilterRedForest()
+    # hsv_filter = Metin50Filter() if metin_selection != 'lv_90' else SnowManFilterRedForest()
+    hsv_filter = Metin50Filter()
 
     # Countdown
-    utils.countdown()
+    # utils.countdown()
 
     # Get window and start window capture
     metin_window = MetinWindow('Aureria.cz')
@@ -25,6 +27,7 @@ def main():
 
     # Initialize the bot
     bot = MetinFarmBot(metin_window, metin_selection)
+
     capt_detect.start()
     bot.start()
 
@@ -32,6 +35,7 @@ def main():
 
         # Get new detections
         screenshot, screenshot_time, detection, detection_time, detection_image = capt_detect.get_info()
+        # print(detection)
 
         # Update bot with new image
         bot.detection_info_update(screenshot, screenshot_time, detection, detection_time)
@@ -59,8 +63,62 @@ def main():
     print('Done.')
 
 
+def loginGUI(username, password,pin):
+    osk_window = OskWindow('On-Screen Keyboard')
+    osk_window.move_window(x=-0, y=0)
+
+    metin_window = MetinWindow('Aureria.cz')
+    metin_window.activate()
+
+    username = list(username)
+    password = list(password)
+    pin = list(pin)
+
+    for char in username:
+        osk_window.press_key(button=char, mode='click')
+
+    osk_window.press_key(button='Tab', mode='click')
+
+    for char in password:
+        osk_window.press_key(button=char, mode='click')
+
+    osk_window.press_key(button='Tab', mode='click')
+
+    for char in pin:
+        osk_window.press_key(button=char, mode='click')
+
+    osk_window.press_key(button="Enter", mode="click")
+    sleep(3)
+    metin_window.activate()
+
+    metin_window.mouse_move(475*1.25, 700*1.25)
+    sleep(0.1)
+    metin_window.mouse_click()
+
+def cleanupGUI():
+    metin_window = MetinWindow('Aureria.cz')
+    metin_window.activate()
+
+    osk_window = OskWindow('On-Screen Keyboard')
+    osk_window.move_window(x=-0, y=0)
+    osk_window.press_key("F", mode="down")
+    sleep(0.1)
+
+    metin_window.mouse_move(51 * 1.25, 422 * 1.25)
+    sleep(0.1)
+    metin_window.mouse_click()
+
+    metin_window.mouse_move(1010 * 1.25, 20 * 1.25)
+    sleep(0.1)
+    metin_window.mouse_click()
+
+
+def exitGame():
+    x = 1
+
+
 def metin_select(metin_selection):
-    metins = {'Lvl. 50: Kámen tvrdosti': 'lv_40',
+    metins = {'Lvl. 45: Kámen stínu': 'lv_40',
               'Lvl. 60: Kámen pádu': 'lv_60',
               'Lvl. 70: Kámen vraždy': 'lv_70',
               'Lvl. 90: Kámen Jeon-Un': 'lv_90'}
