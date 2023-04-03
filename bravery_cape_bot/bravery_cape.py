@@ -1,5 +1,4 @@
-from utils.window import MetinWindow, OskWindow
-import utils.utils as ut
+from window import MetinWindow, OskWindow
 import pyautogui
 import time
 from screeninfo import get_monitors
