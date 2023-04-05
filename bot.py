@@ -1,3 +1,5 @@
+import os
+
 from window import OskWindow
 import time
 import cv2 as cv
@@ -9,6 +11,8 @@ import datetime
 import pytesseract
 import re
 import utils
+import psycopg2
+
 
 
 class BotState(enum.Enum):
@@ -19,8 +23,11 @@ class BotState(enum.Enum):
     HITTING = 4
     COLLECTING_DROP = 5
     RESTART = 6
+    POLLING_NEXT_STATE = 7
+    STANDBY = 8
     ERROR = 100
     DEBUG = 101
+
 
 
 class MetinFarmBot:
@@ -65,7 +72,7 @@ class MetinFarmBot:
         self.metin_count = 0
         self.last_error = None
 
-        self.buff_interval = 300
+        self.buff_interval = 7200
         self.last_buff = time.time()
 
         pytesseract.pytesseract.tesseract_cmd = utils.get_tesseract_path()
@@ -75,10 +82,12 @@ class MetinFarmBot:
         self.switch_state(BotState.INITIALIZING)
 
     def run(self):
+        # db_url = "postgres://user:password@db:5432/dbname"
         while not self.stopped:
 
             if self.state == BotState.INITIALIZING:
                 self.metin_window.activate()
+
                 # self.respawn_if_dead()
                 self.osk_window.mount_up()
                 # self.osk_window.recall_mount()
@@ -87,6 +96,48 @@ class MetinFarmBot:
                 # self.calibrate_view()
                 self.started = time.time()
                 self.switch_state(BotState.SEARCHING)
+
+
+            if self.state == BotState.POLLING_NEXT_STATE:
+                # print(db_url)
+                conn = psycopg2.connect("dbname='dbname' user='user' host='localhost' password='password'")
+                # conn = psycopg2.connect(db_url)
+                cur = conn.cursor()
+                query = "SELECT * FROM StateTable ORDER BY created_at ASC LIMIT 1"
+                cur.execute(query)
+                result = cur.fetchone()
+
+                if result:
+                    nextState = int(result[1])
+                    delete_query = "DELETE FROM StateTable WHERE next_state = %s"
+                    cur.execute(delete_query, result[1])
+                    conn.commit()
+                    self.switch_state(BotState(nextState))
+                else:
+                    self.switch_state(BotState.SEARCHING)
+
+                cur.close()
+                conn.close()
+
+
+            if self.state == BotState.STANDBY:
+                conn = psycopg2.connect("dbname='dbname' user='user' host='localhost' password='password'")
+                cur = conn.cursor()
+                query = "SELECT * FROM StateTable ORDER BY created_at ASC LIMIT 1"
+                cur.execute(query)
+                result = cur.fetchone()
+
+                if result:
+                    nextState = int(result[1])
+                    delete_query = "DELETE FROM StateTable WHERE next_state = %s"
+                    cur.execute(delete_query, result[1])
+                    conn.commit()
+                    self.switch_state(BotState(nextState))
+                else:
+                    self.switch_state(BotState.STANDBY)
+
+                cur.close()
+                conn.close()
 
             if self.state == BotState.SEARCHING:
                 # Check if screenshot is recent
@@ -207,7 +258,7 @@ class MetinFarmBot:
                     self.put_info_text('Turning on buffs...')
                     self.turn_on_buffs()
                     self.last_buff = time.time()
-                self.switch_state(BotState.SEARCHING)
+                self.switch_state(BotState.POLLING_NEXT_STATE)
 
             if self.state == BotState.ERROR:
                 self.put_info_text('Went into error mode!')
