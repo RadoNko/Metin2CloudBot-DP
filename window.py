@@ -135,7 +135,9 @@ class OskWindow(Window):
                         'Enter': (380 * incx, 140 * incy),
                         ';': (40 * incx, 80 * incy), '1': (70 * incx, 80 * incy), '2': (100 * incx, 80 * incy),
                         '3': (130 * incx, 80 * incy),
-                        '4': (160 * incx, 80 * incy),'5': (190 * incx, 80 * incy),'6': (220 * incx, 80 * incy),'7': (250 * incx, 80 * incy),'8': (280 * incx, 80 * incy),'9': (290 * incx, 80 * incy), 'Ctrl': (40 * incx, 210 * incy),
+                        '4': (160 * incx, 80 * incy), '5': (190 * incx, 80 * incy), '6': (220 * incx, 80 * incy),
+                        '7': (250 * incx, 80 * incy), '8': (280 * incx, 80 * incy), '9': (290 * incx, 80 * incy),
+                        'Ctrl': (40 * incx, 210 * incy),
 
                         'q': (50 * incx, 120 * incy), 'w': (80 * incx, 120 * incy), 'e': (110 * incx, 120 * incy),
                         'r': (140 * incx, 110 * incy), 't': (170 * incx, 110 * incy), 'y': (200 * incx, 120 * incy),
@@ -205,6 +207,7 @@ class OskWindow(Window):
         self.press_key(button='Ctrl', mode='click')
         sleep(0.2)
         self.press_key(button='b', mode='click')
+
     def mount_up(self):
         self.press_key(button='Ctrl', mode='click')
         sleep(0.2)

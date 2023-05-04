@@ -13,7 +13,7 @@ def command_pause():
 
 def main():
     pyautogui.countdown(3)
-    aeldra = MetinWindow('Aureria.cz')
+    aeldra = MetinWindow('Razathor')
     vision = Vision()
     # vision.init_control_gui()
     mt50_filter = Metin50Filter()

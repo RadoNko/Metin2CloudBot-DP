@@ -28,12 +28,6 @@ def start():
     return 'Started successfully'
 
 
-@app.route('/stop', methods=['POST'])
-def stop():
-    print("/stop called")
-    # main.exitGame()
-    return 'Stopped successfully'
-
 
 @app.route('/restart', methods=['POST'])
 async def restart():
@@ -46,6 +40,18 @@ async def restart():
     # main.main()
     return 'Restarted successfully'
 
+@app.route('/getCurrentSessionStats/<string:id>', methods=['GET'])
+def getCurrentSessionState(id):
+    conn = psycopg2.connect(db_url)
+    cur = conn.cursor()
+
+    query = f"SELECT * FROM BotStats WHERE cloud_id = {id}" \
+            f" ORDER BY created_at ASC LIMIT 1"
+
+    cur.execute(query)
+    result = cur.fetchone()
+    return result
+
 
 @app.route('/setNextState', methods=['POST'])
 def setNextState():
@@ -55,8 +61,11 @@ def setNextState():
     cur = conn.cursor()
 
     cur.execute(
-        'CREATE TABLE IF NOT EXISTS StateTable (id serial PRIMARY KEY, next_state varchar(255), created_at timestamp)')
-    query = "INSERT INTO StateTable (next_state, created_at) VALUES (%s, %s)"
+        "CREATE TABLE IF NOT EXISTS TaskTable"
+        " (id serial PRIMARY KEY, next_state varchar(255),"
+        "cloud_id varchar(255), created_at timestamp)")
+
+    query = "INSERT INTO TaskTable (next_state, created_at) VALUES (%s, %s)"
 
     cur.execute(query, (nextState, datetime.now()))
     conn.commit()

@@ -1,11 +1,11 @@
+from time import sleep
+import tkinter as tk
+from functools import partial
 import cv2 as cv
 from captureAndDetect import CaptureAndDetect
 from window import MetinWindow, OskWindow
-from bot import MetinFarmBot
-import tkinter as tk
 from vision import Metin50Filter
-from functools import partial
-from time import sleep
+from bot import MetinFarmBot
 
 
 def main():
@@ -20,20 +20,21 @@ def main():
     # utils.countdown()
 
     # Get window and start window capture
-    metin_window = MetinWindow('Aureria.cz')
+    metin_window = MetinWindow('Razathor')
 
     capt_detect = CaptureAndDetect(metin_window, 'classifier/cascade/cascade.xml', hsv_filter)
 
     # Initialize the bot
     bot = MetinFarmBot(metin_window, metin_selection)
-    cleanupGUI()
+    cleanup_gui()
     capt_detect.start()
     bot.start()
 
     while True:
 
         # Get new detections
-        screenshot, screenshot_time, detection, detection_time, detection_image = capt_detect.get_info()
+        screenshot, screenshot_time,\
+            detection, detection_time, detection_image = capt_detect.get_info()
         # print(detection)
 
         # Update bot with new image
@@ -62,11 +63,11 @@ def main():
     print('Done.')
 
 
-def loginGUI(username, password,pin):
+def login_gui(username, password, pin):
     osk_window = OskWindow('On-Screen Keyboard')
     osk_window.move_window(x=-0, y=0)
 
-    metin_window = MetinWindow('Aureria.cz')
+    metin_window = MetinWindow('Razathor')
     metin_window.activate()
 
     username = list(username)
@@ -94,8 +95,8 @@ def loginGUI(username, password,pin):
     sleep(0.1)
     metin_window.mouse_click()
 
-def cleanupGUI():
-    metin_window = MetinWindow('Aureria.cz')
+def cleanup_gui():
+    metin_window = MetinWindow('Razathor')
     metin_window.activate()
 
     osk_window = OskWindow('On-Screen Keyboard')
@@ -110,10 +111,6 @@ def cleanupGUI():
     metin_window.mouse_move(1010 * 1.25, 20 * 1.25)
     sleep(0.1)
     metin_window.mouse_click()
-
-
-def exitGame():
-    x = 1
 
 
 def metin_select(metin_selection):
@@ -131,7 +128,8 @@ def metin_select(metin_selection):
     tk.Label(window, text='Select Metin:').pack(pady=5)
 
     for button_text, label in metins.items():
-        tk.Button(window, text=button_text, width=30, command=partial(set_metin_cb, window, label, metin_selection)) \
+        tk.Button(window, text=button_text, width=30,
+                  command=partial(set_metin_cb, window, label, metin_selection)) \
             .pack(padx=3, pady=3)
 
     window.mainloop()

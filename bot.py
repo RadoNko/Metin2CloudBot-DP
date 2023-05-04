@@ -103,13 +103,13 @@ class MetinFarmBot:
                 conn = psycopg2.connect("dbname='dbname' user='user' host='localhost' password='password'")
                 # conn = psycopg2.connect(db_url)
                 cur = conn.cursor()
-                query = "SELECT * FROM StateTable ORDER BY created_at ASC LIMIT 1"
+                query = "SELECT * FROM TaskTable ORDER BY created_at ASC LIMIT 1"
                 cur.execute(query)
                 result = cur.fetchone()
 
                 if result:
                     nextState = int(result[1])
-                    delete_query = "DELETE FROM StateTable WHERE next_state = %s"
+                    delete_query = "DELETE FROM TaskTable WHERE next_state = %s"
                     cur.execute(delete_query, result[1])
                     conn.commit()
                     self.switch_state(BotState(nextState))
@@ -123,13 +123,13 @@ class MetinFarmBot:
             if self.state == BotState.STANDBY:
                 conn = psycopg2.connect("dbname='dbname' user='user' host='localhost' password='password'")
                 cur = conn.cursor()
-                query = "SELECT * FROM StateTable ORDER BY created_at ASC LIMIT 1"
+                query = "SELECT * FROM TaskTable ORDER BY created_at ASC LIMIT 1"
                 cur.execute(query)
                 result = cur.fetchone()
 
                 if result:
                     nextState = int(result[1])
-                    delete_query = "DELETE FROM StateTable WHERE next_state = %s"
+                    delete_query = "DELETE FROM TaskTable WHERE next_state = %s"
                     cur.execute(delete_query, result[1])
                     conn.commit()
                     self.switch_state(BotState(nextState))
