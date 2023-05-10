@@ -20,6 +20,8 @@ This is a Github repository of my master thesis, where I created a Metin2 auto f
 - **vision.py** - image capture filter settings
 - **window.py** - window handling logic and operations
 - **main.py** - main bot loop
+- **Dockerfile** - API Dockerfile
+- **docker-compose.yml** - services docker-compose file
 - **neg.txt** - negative image description file
 - **pos.txt** - positive image description file
 - **pos.txt** - positive image vector file
